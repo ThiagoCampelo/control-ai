@@ -98,25 +98,18 @@ export default function LandingPage() {
             </Link>
           </div>
 
-          {/* Demo Credentials Indicator */}
+          {/* Demo Access Button */}
           <div className="pt-8 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300">
-            <div className="inline-flex flex-col items-center gap-2 px-6 py-4 rounded-2xl bg-muted/50 border border-primary/20 backdrop-blur-sm max-w-sm mx-auto">
-              <span className="text-xs font-bold uppercase tracking-widest text-primary mb-1">Acesso de Demonstração</span>
-              <div className="flex gap-4 text-sm font-mono text-muted-foreground">
-                <div className="flex flex-col items-center">
-                  <span className="text-[10px] uppercase opacity-50">Email</span>
-                  <span className="select-all font-medium text-foreground">demo@control.ai</span>
-                </div>
-                <div className="w-px bg-border h-full min-h-[2rem]" />
-                <div className="flex flex-col items-center">
-                  <span className="text-[10px] uppercase opacity-50">Senha</span>
-                  <span className="select-all font-medium text-foreground">demo1234</span>
-                </div>
-              </div>
-              <p className="text-[10px] text-muted-foreground mt-1 text-center max-w-[200px]">
-                Ambiente sandbox com API Keys voláteis. Teste à vontade.
-              </p>
-            </div>
+            <Link href="/login?demo=true">
+              <Button size="lg" variant="secondary" className="group h-12 px-8 text-base shadow-lg hover:shadow-primary/20 transition-all rounded-full border border-primary/10">
+                <span className="mr-2">🚀</span>
+                Acessar Demonstração Ao Vivo
+                <span className="ml-2 group-hover:translate-x-1 transition-transform">→</span>
+              </Button>
+            </Link>
+            <p className="text-[10px] text-muted-foreground mt-3 uppercase tracking-widest font-medium opacity-70">
+              Sem cadastro • Acesso Imediato
+            </p>
           </div>
         </section>
 
