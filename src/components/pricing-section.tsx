@@ -64,7 +64,7 @@ export function PricingSection({ mode, companyId, userEmail, currentPlanId }: Pr
                         <CardTitle className="text-2xl">Starter</CardTitle>
                         <CardDescription>Para pequenas equipes e startups.</CardDescription>
                         <div className="mt-4">
-                            <span className="text-4xl font-bold">R$ {isAnnual ? "44,90" : "45,90"}</span>
+                            <span className="text-4xl font-bold">R$ {isAnnual ? "36,90" : "45,90"}</span>
                             <span className="text-muted-foreground">/mês</span>
                         </div>
                     </CardHeader>
@@ -100,7 +100,7 @@ export function PricingSection({ mode, companyId, userEmail, currentPlanId }: Pr
                         <CardTitle className="text-2xl text-primary">Enterprise</CardTitle>
                         <CardDescription>Para empresas em escala.</CardDescription>
                         <div className="mt-4">
-                            <span className="text-4xl font-bold">R$ {isAnnual ? "179,90" : "199,90"}</span>
+                            <span className="text-4xl font-bold">R$ {isAnnual ? "159,90" : "199,90"}</span>
                             <span className="text-muted-foreground">/mês</span>
                         </div>
                     </CardHeader>

@@ -2,6 +2,7 @@ import { createOpenAI } from '@ai-sdk/openai';
 import { createDeepSeek } from '@ai-sdk/deepseek';
 import { createAnthropic } from '@ai-sdk/anthropic';
 import { streamText, convertToModelMessages } from 'ai';
+import { after } from 'next/server';
 import { createAIModel } from '@/utils/ai-factory';
 import { createClient } from '@/utils/supabase/server';
 import { createAdminClient } from '@/utils/supabase/admin';
@@ -196,33 +197,37 @@ export async function POST(req: Request) {
             system: systemPrompt,
 
             onFinish: async ({ text, usage }) => {
-                if (sessionId) {
-                    // Salva a resposta do assistente no histórico do chat
-                    const { error: msgError } = await supabase.from('chat_messages').insert({
-                        session_id: sessionId,
-                        role: 'assistant',
-                        content: text,
+                // Usa 'after' para garantir que o salvamento ocorra mesmo se o cliente desconectar
+                after(async () => {
+                    const adminDb = await createAdminClient();
+
+                    if (sessionId) {
+                        const { error: msgError } = await adminDb.from('chat_messages').insert({
+                            session_id: sessionId,
+                            role: 'assistant',
+                            content: text,
+                        });
+                        if (msgError) console.error("❌ Erro ao salvar resposta do assistente (Background):", msgError);
+                    }
+
+                    // Registra log de auditoria
+                    const tokenCount = usage?.totalTokens || 0;
+                    console.log(`[Audit] Saving log: User ${user.id}, Tokens: ${tokenCount}`);
+
+                    const { error: auditError } = await adminDb.from('audit_logs').insert({
+                        company_id: profile.company_id || null,
+                        user_id: user.id,
+                        action: 'chat_completion',
+                        details: {
+                            model: finalModelName,
+                            session_id: sessionId,
+                            agent_id: activeAgentId,
+                            tokens_used: tokenCount,
+                            usage_raw: usage || null
+                        },
                     });
-                    if (msgError) console.error("❌ Erro ao salvar resposta do assistente:", msgError);
-                }
-
-                // Registra log de auditoria para fins de compliance e faturamento
-                const tokenCount = usage?.totalTokens || 0;
-                console.log(`[Audit] Saving log: User ${user.id}, Tokens: ${tokenCount}`);
-
-                const { error: auditError } = await supabase.from('audit_logs').insert({
-                    company_id: profile.company_id || null, // Master Admin pode não ter empresa
-                    user_id: user.id,
-                    action: 'chat_completion',
-                    details: {
-                        model: finalModelName,
-                        session_id: sessionId,
-                        agent_id: activeAgentId,
-                        tokens_used: tokenCount,
-                        usage_raw: usage || null
-                    },
+                    if (auditError) console.error("❌ Erro ao salvar log de auditoria (Background):", auditError);
                 });
-                if (auditError) console.error("❌ Erro ao salvar log de auditoria:", auditError);
             },
             onError: async ({ error }) => {
                 const err = error as any;
@@ -237,10 +242,13 @@ export async function POST(req: Request) {
                 }
 
                 if (sessionId) {
-                    await supabase.from('chat_messages').insert({
-                        session_id: sessionId,
-                        role: 'assistant',
-                        content: `🛑 **Erro:** ${friendlyError}`,
+                    after(async () => {
+                        const adminDb = await createAdminClient();
+                        await adminDb.from('chat_messages').insert({
+                            session_id: sessionId,
+                            role: 'assistant',
+                            content: `🛑 **Erro:** ${friendlyError}`,
+                        });
                     });
                 }
             },
