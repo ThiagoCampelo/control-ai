@@ -97,6 +97,27 @@ export default function LandingPage() {
               </Button>
             </Link>
           </div>
+
+          {/* Demo Credentials Indicator */}
+          <div className="pt-8 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300">
+            <div className="inline-flex flex-col items-center gap-2 px-6 py-4 rounded-2xl bg-muted/50 border border-primary/20 backdrop-blur-sm max-w-sm mx-auto">
+              <span className="text-xs font-bold uppercase tracking-widest text-primary mb-1">Acesso de Demonstração</span>
+              <div className="flex gap-4 text-sm font-mono text-muted-foreground">
+                <div className="flex flex-col items-center">
+                  <span className="text-[10px] uppercase opacity-50">Email</span>
+                  <span className="select-all font-medium text-foreground">demo@control.ai</span>
+                </div>
+                <div className="w-px bg-border h-full min-h-[2rem]" />
+                <div className="flex flex-col items-center">
+                  <span className="text-[10px] uppercase opacity-50">Senha</span>
+                  <span className="select-all font-medium text-foreground">demo1234</span>
+                </div>
+              </div>
+              <p className="text-[10px] text-muted-foreground mt-1 text-center max-w-[200px]">
+                Ambiente sandbox com API Keys voláteis. Teste à vontade.
+              </p>
+            </div>
+          </div>
         </section>
 
         {/* FEATURES SECTION */}
