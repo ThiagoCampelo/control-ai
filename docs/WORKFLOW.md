@@ -13,7 +13,7 @@ Este documento define o padrão de desenvolvimento e *release* para o **ControlA
 ### 2. `develop` (Homologação/Staging) 🛠️
 - **Estado**: Beta constante. Contém as funcionalidades mais recentes.
 - **Uso**: Branch padrão para desenvolvimento diário.
-- **Deploy**: Pode ser conectado a um ambiente de "Preview" ou "Staging" na Vercel.
+- **Deploy**: Ambiente de Staging: https://control-ai-dev.vercel.app/
 - **Fluxo**: Todos os Pull Requests (PRs) ou commits de funcionalidades devem ir para cá primeiro.
 
 ### 3. Branches de Feature (`feat/...`, `fix/...`)
