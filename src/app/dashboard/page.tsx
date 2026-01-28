@@ -1,4 +1,5 @@
 import { createClient } from "@/utils/supabase/server"
+import Link from "next/link"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { MessageSquare, Zap, Users, ShieldCheck, TrendingUp, DollarSign, CreditCard, Bot, Building2, ArrowUpRight } from "lucide-react"
 import { stripe } from "@/utils/stripe"
@@ -19,15 +20,12 @@ export default async function DashboardPage() {
   const planName = companyData?.plans?.name || 'Gratuito'
   const isMaster = profile?.role === 'master_admin'
 
+  // Métras de Demonstração (Reais) - IDs fixos do ambiente
+  const DEMO_PLAN_ID = '5f62631b-6ad0-464f-b708-58cf1620743a'
+  const DEMO_USER_ID = '59f2c478-445d-452b-8078-4af6cde9c254'
+
   // Fetch metrics data
-  const [
-    statsResult,
-    usersResult,
-    logsResult,
-    agentsResult,
-    companiesResult,
-    subscriptionsResult
-  ] = await Promise.all([
+  const results = await Promise.all([
     isMaster
       ? supabase.from('conversations').select('*', { count: 'exact', head: true })
       : supabase.from('conversations').select('*', { count: 'exact', head: true }).eq('company_id', companyId),
@@ -50,12 +48,31 @@ export default async function DashboardPage() {
 
     isMaster
       ? stripe.subscriptions.list({ status: 'active', expand: ['data.plan.product'] })
-      : Promise.resolve({ data: [] })
+      : Promise.resolve({ data: [] }),
+
+    // Métricas extras para Master: Acessos Demo e Conversões
+    isMaster
+      ? supabase.from('audit_logs').select('*', { count: 'exact', head: true }).eq('user_id', DEMO_USER_ID)
+      : Promise.resolve({ count: 0 }),
+    isMaster
+      ? supabase.from('companies').select('*', { count: 'exact', head: true }).not('plan_id', 'eq', DEMO_PLAN_ID)
+      : Promise.resolve({ count: 0 })
   ])
+
+  const statsResult = results[0] as any
+  const usersResult = results[1] as any
+  const logsResult = results[2] as any
+  const agentsResult = results[3] as any
+  const companiesResult = results[4] as any
+  const subscriptionsResult = results[5] as any
+  const demoLogsResult = results[6] as any
+  const conversionsResult = results[7] as any
 
   const totalConversations = statsResult.count || 0
   const totalMembers = usersResult.count || 0
-  const totalTokens = (logsResult.data || []).reduce((acc, log: any) => acc + (log.details?.tokens_used || 0), 0)
+  const totalTokens = (logsResult.data || []).reduce((acc: number, log: any) => acc + (log.details?.tokens_used || 0), 0)
+  const demoCount = demoLogsResult?.count || 0
+  const conversionCount = conversionsResult?.count || 0
 
   // Master only metrics logic
   let mrr = 0
@@ -168,6 +185,49 @@ export default async function DashboardPage() {
                 description="Assinantes vs Total"
                 premium
               />
+            </div>
+          </section>
+
+          <section className="space-y-4">
+            <h3 className="text-lg font-bold flex items-center gap-2 px-1 text-muted-foreground">
+              <span className="w-1.5 h-6 bg-blue-500 rounded-full"></span>
+              Ambiente de Demonstração
+            </h3>
+            <div className="grid gap-4 md:grid-cols-3">
+              <Card className="bg-blue-950/20 border-blue-800/30">
+                <CardHeader className="pb-2 flex flex-row items-center justify-between">
+                  <CardTitle className="text-sm font-medium text-blue-400">Acessos Demo</CardTitle>
+                  <Users className="w-4 h-4 text-blue-500" />
+                </CardHeader>
+                <CardContent>
+                  <div className="flex justify-between items-end">
+                    <div className="space-y-1">
+                      <span className="text-xs text-muted-foreground uppercase font-bold">Total de Logs</span>
+                      <div className="text-2xl font-bold font-mono text-blue-400">
+                        {demoCount}
+                      </div>
+                    </div>
+                  </div>
+                  <p className="text-[10px] text-muted-foreground mt-2 font-medium">Interações do usuário demo</p>
+                </CardContent>
+              </Card>
+
+              <StatCard
+                title="Conversão Premium"
+                value={String(conversionCount)}
+                icon={TrendingUp}
+                trend={conversionCount > 0}
+                description="Empresas em planos pagos"
+              />
+
+              <div className="flex flex-col p-4 rounded-2xl border bg-blue-900/10 border-blue-500/20 shadow-sm justify-center">
+                <span className="text-[10px] font-bold text-blue-400 uppercase tracking-wider">Gestão Global</span>
+                <div className="mt-2">
+                  <Link href="/dashboard/admin" className="text-sm font-medium text-blue-300 hover:text-blue-200 flex items-center gap-1 group">
+                    Ir para Administração <ArrowUpRight className="w-3 h-3 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                  </Link>
+                </div>
+              </div>
             </div>
           </section>
 

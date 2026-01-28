@@ -1,5 +1,10 @@
 -- Formalize Demo Environment
 
+-- 0. Update Role Constraint to allow 'demo_user'
+ALTER TABLE profiles DROP CONSTRAINT IF EXISTS profiles_role_check;
+ALTER TABLE profiles ADD CONSTRAINT profiles_role_check 
+    CHECK (role IN ('master_admin', 'tenant_admin', 'employee', 'demo_user'));
+
 DO $$
 DECLARE
     plan_id uuid;

@@ -45,6 +45,10 @@ function RoleBadge({ role }: { role: string }) {
     employee: {
       label: "Membro",
       className: "bg-slate-500/10 text-slate-500 border-slate-500/20 hover:bg-slate-500/20"
+    },
+    demo_user: {
+      label: "Demonstração",
+      className: "bg-blue-400/10 text-blue-400 border-blue-400/20 hover:bg-blue-400/20"
     }
   }
 
@@ -95,7 +99,7 @@ export default async function AdminPage() {
 
     return (
       <div className="space-y-6">
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 md:grid-cols-2">
           <Card>
             <CardHeader className="pb-2"><CardTitle className="text-sm font-medium">Total de Empresas</CardTitle></CardHeader>
             <CardContent><div className="text-2xl font-bold">{companies.length}</div></CardContent>
@@ -107,31 +111,7 @@ export default async function AdminPage() {
             </CardContent>
           </Card>
 
-          {/* Demo Analytics */}
-          <Card className="bg-blue-950/20 border-blue-800/30">
-            <CardHeader className="pb-2 flex flex-row items-center justify-between">
-              <CardTitle className="text-sm font-medium text-blue-400">Ambiente Demo</CardTitle>
-              <div className="p-1.5 rounded bg-blue-500/10">
-                <ShieldCheck className="w-4 h-4 text-blue-500" />
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="flex justify-between items-end">
-                <div className="space-y-1">
-                  <span className="text-xs text-muted-foreground uppercase font-bold">Acessos</span>
-                  <div className="text-2xl font-bold font-mono">
-                    {/* Simple approximation based on demo user activity */}
-                    {allUsers.find(u => u.email === 'demo@control.ai')?.is_active ? 'Ativo' : 'Inativo'}
-                  </div>
-                </div>
-              </div>
-              <div className="mt-3 pt-3 border-t border-blue-900/50 flex gap-4 text-xs">
-                <div>
-                  <span className="text-blue-400/70">Plano:</span> <span className="font-medium text-blue-300">Demo Plan</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+
         </div>
 
         <Tabs defaultValue="companies" className="w-full">
@@ -199,9 +179,12 @@ export default async function AdminPage() {
 
           <TabsContent value="users" className="mt-6">
             <Card>
-              <CardHeader>
-                <CardTitle>Todos os Usuários</CardTitle>
-                <CardDescription>Controle de acesso global de usuários.</CardDescription>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0">
+                <div>
+                  <CardTitle>Todos os Usuários</CardTitle>
+                  <CardDescription>Controle de acesso global de usuários.</CardDescription>
+                </div>
+                <InviteUserDialog />
               </CardHeader>
               <CardContent>
                 <Table>
@@ -271,7 +254,7 @@ export default async function AdminPage() {
 
       {/* Demo Access Card for Admin Convenience */}
       {profile.email === 'admin@control.ai' && (
-        <Card className="bg-gradient-to-r from-blue-950/40 to-indigo-950/40 border-blue-500/20">
+        <Card className="bg-linear-to-r from-blue-950/40 to-indigo-950/40 border-blue-500/20">
           <CardHeader>
             <div className="flex items-center gap-2">
               <span className="text-xl">🚀</span>

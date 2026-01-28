@@ -1,9 +1,9 @@
 import { createClient } from "@/utils/supabase/server"
 import { createAdminClient } from "@/utils/supabase/admin"
 import { SettingsForm } from "./settings-form"
-import { InviteMemberDialog } from "@/components/dashboard/invite-member-dialog"
+import { RestrictedAccess } from "@/components/dashboard/restricted-access"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { CheckCircle2, AlertCircle, ShieldAlert } from "lucide-react"
+import { CheckCircle2, AlertCircle } from "lucide-react"
 
 export default async function SettingsPage() {
     const supabase = await createClient()
@@ -11,24 +11,15 @@ export default async function SettingsPage() {
     const { data: { user } } = await supabase.auth.getUser()
     const { data: profile } = await supabase
         .from('profiles')
-        .select('company_id, role')
+        .select('company_id, role, companies(plans(name))')
         .eq('id', user?.id)
         .single()
 
-    // Bloqueia acesso de Demo User
-    if (profile?.role === 'demo_user') {
-        return (
-            <div className="flex h-[50vh] flex-col items-center justify-center p-8 text-center space-y-4">
-                <div className="p-4 rounded-full bg-orange-100 dark:bg-orange-950/30">
-                    <ShieldAlert className="w-12 h-12 text-orange-600 dark:text-orange-500" />
-                </div>
-                <h2 className="text-2xl font-bold">Acesso Restrito</h2>
-                <p className="text-muted-foreground max-w-md">
-                    O ambiente de demonstração não permite alterações nas configurações da empresa.
-                    Crie sua conta para ter acesso total.
-                </p>
-            </div>
-        )
+    const planName = (profile?.companies as any)?.plans?.name;
+
+    // Bloqueia acesso se for Demo User OU se a empresa estiver no Demo Plan
+    if (profile?.role === 'demo_user' || planName === 'Demo Plan') {
+        return <RestrictedAccess />
     }
 
     // Usa Admin Client para ler chaves (bypass RLS)
@@ -38,14 +29,6 @@ export default async function SettingsPage() {
         .select('api_key_openai, api_key_anthropic, api_key_google')
         .eq('id', profile?.company_id)
         .single()
-
-    // Log para debug no servidor
-    console.log("Settings Page Debug:", {
-        profileCompanyId: profile?.company_id,
-        companyFound: !!company,
-        companyError: companyError?.message,
-        hasOpenAIKey: !!company?.api_key_openai
-    })
 
     function KeyStatus({ active, label }: { active: boolean, label: string }) {
         return (
@@ -75,25 +58,6 @@ export default async function SettingsPage() {
                 </CardHeader>
                 <CardContent>
                     <SettingsForm />
-                </CardContent>
-            </Card>
-
-            <Card>
-                <CardHeader>
-                    <CardTitle>Gestão da Equipe</CardTitle>
-                    <CardDescription>
-                        Convide membros para colaborar na sua empresa.
-                    </CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <div className="flex justify-between items-center bg-muted/50 p-4 rounded-lg">
-                        <div>
-                            <p className="font-medium">Membros Ativos</p>
-                            <p className="text-sm text-muted-foreground">Gerencie o acesso à sua organização.</p>
-                        </div>
-                        <InviteMemberDialog />
-                    </div>
-                    {/* Lista de membros pode ser adicionada aqui futuramente */}
                 </CardContent>
             </Card>
         </div>
