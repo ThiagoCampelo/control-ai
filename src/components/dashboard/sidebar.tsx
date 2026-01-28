@@ -44,7 +44,7 @@ export function Sidebar({ userRole, className }: { userRole: string; className?:
         </Link>
 
         {/* Links Apenas para Admins (Tenant ou Master) */}
-        {(userRole === 'tenant_admin' || userRole === 'master_admin') && (
+        {(userRole === 'tenant_admin' || userRole === 'master_admin' || userRole === 'demo_user') && (
           <>
             <p className="px-2 text-xs font-semibold text-muted-foreground mt-6 mb-2">ADMINISTRAÇÃO</p>
 
@@ -59,10 +59,10 @@ export function Sidebar({ userRole, className }: { userRole: string; className?:
             </Link>
 
             {userRole !== 'demo_user' && (
-              <Link href="/dashboard/settings" className="flex items-center gap-3 rounded-lg px-3 py-2 text-sidebar-foreground/70 hover:bg-sidebar-accent transition-all">
-                <Settings className="h-5 w-5" />
-                Configurações
-              </Link>
+            <Link href="/dashboard/settings" className="flex items-center gap-3 rounded-lg px-3 py-2 text-sidebar-foreground/70 hover:bg-sidebar-accent transition-all">
+              <Settings className="h-5 w-5" />
+              Configurações
+            </Link>
             )}
 
             <Link href="/dashboard/subscription" className="flex items-center gap-3 rounded-lg px-3 py-2 text-sidebar-foreground/70 hover:bg-sidebar-accent transition-all">
