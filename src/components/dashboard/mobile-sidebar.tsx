@@ -1,7 +1,7 @@
 "use client"
 
 import { Menu } from "lucide-react"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription } from "@/components/ui/sheet"
 import { Sidebar } from "@/components/dashboard/sidebar"
 import { Button } from "@/components/ui/button"
 
@@ -17,8 +17,12 @@ export function MobileSidebar({ userRole }: MobileSidebarProps) {
                     <Menu className="w-6 h-6" />
                 </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="p-0">
-                <Sidebar userRole={userRole} />
+            <SheetContent side="left" className="p-0 border-r-0 w-72 bg-sidebar text-sidebar-foreground">
+                {/* Hidden accessible title for screen readers */}
+                <SheetTitle className="sr-only">Menu de Navegação</SheetTitle>
+                <SheetDescription className="sr-only">Navegação principal do sistema</SheetDescription>
+
+                <Sidebar userRole={userRole} className="w-full h-full border-none" />
             </SheetContent>
         </Sheet>
     )

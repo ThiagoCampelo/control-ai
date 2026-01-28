@@ -10,9 +10,18 @@ import { Button } from "@/components/ui/button"
  * 
  * @param userRole - Papel do usuário atual ('master_admin', 'tenant_admin' ou 'employee').
  */
-export function Sidebar({ userRole }: { userRole: string }) {
+import { cn } from "@/lib/utils"
+
+/**
+ * Componente de Barra Lateral (Sidebar).
+ * Exibe a navegação principal baseada no role do usuário.
+ * 
+ * @param userRole - Papel do usuário atual ('master_admin', 'tenant_admin' ou 'employee').
+ * @param className - Classes adicionais para estilização personalizada.
+ */
+export function Sidebar({ userRole, className }: { userRole: string; className?: string }) {
   return (
-    <div className="flex h-screen w-64 flex-col border-r bg-sidebar border-sidebar-border">
+    <div className={cn("flex h-screen w-64 flex-col border-r bg-sidebar border-sidebar-border", className)}>
       <div className="flex h-16 items-center px-6 border-b border-sidebar-border">
         <Logo />
       </div>
