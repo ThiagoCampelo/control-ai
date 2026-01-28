@@ -50,6 +50,20 @@ export async function POST(req: Request) {
 
     if (!profile?.company_id) return new Response('Empresa não encontrada', { status: 404 });
 
+    // --- LIMITAÇÃO DEMO ---
+    // Se for a empresa de Demo, aplica limite agressivo no chat para evitar abuso.
+    const { data: userCompany } = await supabase.from('companies').select('name').eq('id', profile.company_id).single();
+    if (userCompany?.name === 'Demo Enterprise') {
+        const { count } = await supabase.from('chat_messages')
+            .select('*', { count: 'exact', head: true })
+            .eq('session_id', sessionId);
+
+        // Limite de 10 mensagens por sessão no Demo
+        if ((count || 0) >= 10) {
+            return new Response('Limite da demonstração atingido. Por favor, crie sua própria conta/empresa para continuar.', { status: 403 });
+        }
+    }
+
     // --- VERIFICAÇÃO DE LIMITES: Acesso ao Modelo ---
     // Verifica se a empresa tem permissão para usar este modelo específico.
     // Master Admin ignora esta verificação (acesso irrestrito).

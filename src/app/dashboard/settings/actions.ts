@@ -42,12 +42,21 @@ export async function updateSettings(prevState: any, formData: FormData): Promis
         updates[dbColumn] = encrypt(trimmedKey)
     }
 
-    try {
-        // OpenAI e Claude (Anthropic) conforme PRD
-        processKey('apiKeyOpenAI', 'api_key_openai', 'sk-')
-        processKey('apiKeyAnthropic', 'api_key_anthropic', 'sk-ant-')
-    } catch (err: any) {
-        return { error: err.message }
+    // Verificamos se houve pedido de exclusão
+    const action = formData.get('action') as string;
+
+    if (action === 'delete_openai') {
+        updates['api_key_openai'] = null as any; // Supabase update handles null correctly
+    } else if (action === 'delete_anthropic') {
+        updates['api_key_anthropic'] = null as any;
+    } else {
+        // Fluxo padrão de salvar/atualizar
+        try {
+            processKey('apiKeyOpenAI', 'api_key_openai', 'sk-')
+            processKey('apiKeyAnthropic', 'api_key_anthropic', 'sk-ant-')
+        } catch (err: any) {
+            return { error: err.message }
+        }
     }
 
     if (Object.keys(updates).length > 0) {
@@ -57,16 +66,13 @@ export async function updateSettings(prevState: any, formData: FormData): Promis
             // Usamos upsert para garantir que a empresa seja criada caso não tenha sido
             const { data: resultData, error } = await adminClient
                 .from('companies')
-                .upsert({
-                    id: profile.company_id,
-                    name: 'Minha Empresa',
-                    ...updates
-                }, { onConflict: 'id' })
+                .update(updates)
+                .eq('id', profile.company_id)
                 .select()
                 .single()
 
             if (error) throw error
-            console.log("Upsert result:", JSON.stringify(resultData, null, 2))
+            console.log("Update result:", JSON.stringify(resultData, null, 2))
 
         } catch (err: any) {
             console.error(err)

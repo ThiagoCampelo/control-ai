@@ -15,7 +15,7 @@ export default async function SubscriptionPage() {
   const { data: { user } } = await supabase.auth.getUser()
   const { data: profile } = await supabase
     .from('profiles')
-    .select('company_id, email, role, companies(plan_id)')
+    .select('company_id, email, role, companies(plan_id, plans(name))')
     .eq('id', user?.id)
     .single()
 
@@ -42,6 +42,8 @@ export default async function SubscriptionPage() {
         </p>
       </div>
 
+
+      {/* Se o plano for o Demo, tratamos como se não tivesse plano (para incentivar upgrade) */}
       {isMaster ? (
         <div className="space-y-6">
           <Card className="border-primary/20 bg-linear-to-br from-primary/5 via-background to-background">
@@ -114,7 +116,8 @@ export default async function SubscriptionPage() {
           mode="dashboard"
           companyId={profile?.company_id}
           userEmail={profile?.email}
-          currentPlanId={currentPlanId}
+          // Se o nome do plano for 'Enterprise Demo', passamos null para forçar a UI de assinatura
+          currentPlanId={(profile?.companies as any)?.plans?.name === 'Enterprise Demo' ? null : currentPlanId}
         />
       )}
 

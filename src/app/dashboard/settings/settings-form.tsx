@@ -34,28 +34,38 @@ export function SettingsForm() {
             {/* OpenAI */}
             <div className="space-y-2">
                 <Label htmlFor="apiKeyOpenAI">OpenAI API Key</Label>
-                <Input
-                    id="apiKeyOpenAI"
-                    name="apiKeyOpenAI"
-                    type="password"
-                    placeholder="sk-..."
-                    className="font-mono"
-                />
+                <div className="flex gap-2">
+                    <Input
+                        id="apiKeyOpenAI"
+                        name="apiKeyOpenAI"
+                        type="password"
+                        placeholder="sk-..."
+                        className="font-mono flex-1"
+                    />
+                    <Button type="submit" name="action" value="delete_openai" variant="destructive" size="sm" title="Apagar Chave">
+                        Apagar
+                    </Button>
+                </div>
             </div>
 
             {/* Anthropic */}
             <div className="space-y-2">
                 <Label htmlFor="apiKeyAnthropic">Anthropic (Claude) API Key</Label>
-                <Input
-                    id="apiKeyAnthropic"
-                    name="apiKeyAnthropic"
-                    type="password"
-                    placeholder="sk-ant-..."
-                    className="font-mono"
-                />
+                <div className="flex gap-2">
+                    <Input
+                        id="apiKeyAnthropic"
+                        name="apiKeyAnthropic"
+                        type="password"
+                        placeholder="sk-ant-..."
+                        className="font-mono flex-1"
+                    />
+                    <Button type="submit" name="action" value="delete_anthropic" variant="destructive" size="sm" title="Apagar Chave">
+                        Apagar
+                    </Button>
+                </div>
             </div>
 
-            <Button type="submit" disabled={isPending}>
+            <Button type="submit" name="action" value="save" disabled={isPending}>
                 {isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
                 {isPending ? 'Salvando...' : 'Salvar Chaves'}
             </Button>
