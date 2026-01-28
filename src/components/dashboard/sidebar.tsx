@@ -22,8 +22,13 @@ import { cn } from "@/lib/utils"
 export function Sidebar({ userRole, className }: { userRole: string; className?: string }) {
   return (
     <div className={cn("flex h-screen w-64 flex-col border-r bg-sidebar border-sidebar-border", className)}>
-      <div className="flex h-16 items-center px-6 border-b border-sidebar-border">
+      <div className="flex h-16 items-center justify-between px-6 border-b border-sidebar-border">
         <Logo />
+        {process.env.NODE_ENV === 'development' && (
+          <span className="text-[10px] font-bold bg-amber-500/20 text-amber-600 px-2 py-0.5 rounded-full border border-amber-500/30 animate-pulse">
+            DEV
+          </span>
+        )}
       </div>
 
       <nav className="flex-1 space-y-2 px-4 py-6">
