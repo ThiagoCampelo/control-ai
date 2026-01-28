@@ -243,6 +243,37 @@ export default async function AdminPage() {
         <InviteUserDialog />
       </div>
 
+      {/* Demo Access Card for Admin Convenience */}
+      {profile.email === 'admin@control.ai' && (
+        <Card className="bg-gradient-to-r from-blue-950/40 to-indigo-950/40 border-blue-500/20">
+          <CardHeader>
+            <div className="flex items-center gap-2">
+              <span className="text-xl">🚀</span>
+              <CardTitle className="text-lg text-blue-400">Dados de Acesso (Demo)</CardTitle>
+            </div>
+            <CardDescription>
+              Compartilhe estes dados (ou o Magic Link) para demonstrações rápidas.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="flex flex-col md:flex-row gap-6">
+            <div className="space-y-1">
+              <p className="text-xs uppercase text-muted-foreground font-bold">Email</p>
+              <code className="text-sm bg-background/50 px-2 py-1 rounded select-all">demo@control.ai</code>
+            </div>
+            <div className="space-y-1">
+              <p className="text-xs uppercase text-muted-foreground font-bold">Senha</p>
+              <code className="text-sm bg-background/50 px-2 py-1 rounded select-all">demo1234</code>
+            </div>
+            <div className="space-y-1">
+              <p className="text-xs uppercase text-muted-foreground font-bold">Magic Link</p>
+              <code className="text-sm bg-background/50 px-2 py-1 rounded select-all text-blue-400">
+                https://control-ai.vercel.app/login?demo=true
+              </code>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       <Card>
         <CardHeader>
           <CardTitle>Membros da Equipe</CardTitle>
