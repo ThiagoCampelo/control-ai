@@ -11,6 +11,8 @@ import { Logo } from "@/components/logo";
 import { FeatureItem } from "@/components/feature-item";
 import { PricingSection } from "@/components/pricing-section";
 import { Badge } from "@/components/ui/badge";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Menu } from "lucide-react";
 
 export default function LandingPage() {
   const [isAnnual, setIsAnnual] = useState(false);
@@ -28,13 +30,44 @@ export default function LandingPage() {
           <Link href="#security" className="hover:text-foreground transition-colors">Segurança</Link>
         </nav>
         <div className="flex gap-2 items-center">
-          <ThemeToggle />
-          <Link href="/login">
-            <Button variant="ghost">Entrar</Button>
-          </Link>
-          <Link href="/register">
-            <Button>Criar Conta Grátis</Button>
-          </Link>
+          <div className="hidden md:flex gap-2 items-center">
+            <ThemeToggle />
+            <Link href="/login">
+              <Button variant="ghost">Entrar</Button>
+            </Link>
+            <Link href="/register">
+              <Button>Criar Conta Grátis</Button>
+            </Link>
+          </div>
+
+          {/* Mobile Menu */}
+          <div className="md:hidden flex items-center gap-2">
+            <ThemeToggle />
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <Menu className="w-6 h-6" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right">
+                <div className="flex flex-col gap-6 mt-6">
+                  <nav className="flex flex-col gap-4 text-base font-medium text-muted-foreground">
+                    <Link href="#features" className="hover:text-foreground transition-colors">Funcionalidades</Link>
+                    <Link href="#pricing" className="hover:text-foreground transition-colors">Preços</Link>
+                    <Link href="#security" className="hover:text-foreground transition-colors">Segurança</Link>
+                  </nav>
+                  <div className="flex flex-col gap-2">
+                    <Link href="/login" className="w-full">
+                      <Button variant="ghost" className="w-full justify-start">Entrar</Button>
+                    </Link>
+                    <Link href="/register" className="w-full">
+                      <Button className="w-full">Criar Conta Grátis</Button>
+                    </Link>
+                  </div>
+                </div>
+              </SheetContent>
+            </Sheet>
+          </div>
         </div>
       </header>
 

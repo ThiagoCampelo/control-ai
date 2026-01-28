@@ -345,9 +345,9 @@ export default function ChatPage() {
     }
 
     return (
-        <div className="flex h-[calc(100vh-140px)] gap-4 overflow-hidden">
-            {/* Sidebar */}
-            <div className="w-64 flex flex-col bg-card rounded-xl border shrink-0 overflow-hidden shadow-sm">
+        <div className="flex h-[calc(100dvh-130px)] md:h-[calc(100vh-140px)] gap-4 overflow-hidden">
+            {/* Sidebar (History) - Hidden on mobile, visible on desktop */}
+            <div className="hidden md:flex w-64 flex-col bg-card rounded-xl border shrink-0 overflow-hidden shadow-sm">
                 <div className="p-3 border-b bg-muted/30">
                     <Button onClick={handleNewChat} className="w-full shadow-sm" variant="outline">
                         <Plus className="w-4 h-4 mr-2" />
@@ -384,7 +384,7 @@ export default function ChatPage() {
             {/* Main Area */}
             <div className="flex-1 flex flex-col min-w-0 bg-card rounded-xl border shadow-sm overflow-hidden h-full">
                 {/* Header */}
-                <div className="flex items-center justify-between p-4 border-b bg-muted/10">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 border-b bg-muted/10 gap-4 sm:gap-0">
                     <div className="flex items-center gap-3">
                         <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
                             <Bot className="w-5 h-5 text-primary" />
@@ -395,7 +395,7 @@ export default function ChatPage() {
                         </div>
                     </div>
 
-                    <div className="flex items-center -space-x-px drop-shadow-sm">
+                    <div className="flex items-center -space-x-px drop-shadow-sm w-full sm:w-auto">
                         <Select
                             value={selectedAgentId}
                             onValueChange={(val) => {
@@ -407,9 +407,9 @@ export default function ChatPage() {
                             }}
                             disabled={!!currentSessionId}
                         >
-                            <SelectTrigger className="h-9 w-[180px] sm:w-[220px] rounded-r-none bg-background focus:ring-1 focus:ring-primary focus:z-10 border-r-0">
+                            <SelectTrigger className="h-9 w-1/2 sm:w-[220px] rounded-r-none bg-background focus:ring-1 focus:ring-primary focus:z-10 border-r-0">
                                 <Bot className="w-3.5 h-3.5 mr-2 text-primary" />
-                                <SelectValue placeholder="Escolher Agente" />
+                                <SelectValue placeholder="Agente" />
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectItem value="none">Conversa Livre (Sem Agente)</SelectItem>
@@ -424,7 +424,7 @@ export default function ChatPage() {
                             onValueChange={setModel}
                             disabled={selectedAgentId !== 'none' || !!currentSessionId}
                         >
-                            <SelectTrigger className="h-9 w-[180px] sm:w-[220px] rounded-l-none bg-background focus:ring-1 focus:ring-primary focus:z-10 -ml-px">
+                            <SelectTrigger className="h-9 w-1/2 sm:w-[220px] rounded-l-none bg-background focus:ring-1 focus:ring-primary focus:z-10 -ml-px">
                                 <SelectValue placeholder="Modelo" />
                             </SelectTrigger>
                             <SelectContent>

@@ -10,7 +10,7 @@
 **A ponte segura entre sua empresa e a Inteligência Artificial.**
 *Gerencie, audite e escale o uso de IA com privacidade absoluta.*
 
-[Documentação](./docs/PRD.md) • [Reportar Bug](https://github.com/issues)
+[Demonstração](https://control-ai-xi.vercel.app) • [Documentação](./docs/PRD.md) • [Reportar Bug](https://github.com/issues)
 
 </div>
 
