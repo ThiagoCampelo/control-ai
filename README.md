@@ -73,7 +73,17 @@ graph LR
 
 ---
 
-## 💻 Tech Stack
+## � Acesso de Demonstração
+
+Para testar a plataforma em produção sem criar conta:
+
+- **URL**: [https://control-ai-xi.vercel.app/login](https://control-ai-xi.vercel.app/login)
+- **Email**: `demo@control.ai`
+- **Senha**: `demo1234`
+
+> **Nota**: Este usuário possui nível de acesso `Tenant Admin`, permitindo visualizar o dashboard completo e criar agentes.
+
+## �💻 Tech Stack
 
 | Categoria | Tecnologia | Justificativa |
 |:---|:---|:---|
