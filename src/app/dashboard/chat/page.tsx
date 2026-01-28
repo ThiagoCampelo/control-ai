@@ -93,6 +93,8 @@ export default function ChatPage() {
     const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
     const [loadingSessions, setLoadingSessions] = useState(true);
     const [allowedModels, setAllowedModels] = useState<string[]>([]);
+    const [isDemoUser, setIsDemoUser] = useState(false);
+    const [tempApiKey, setTempApiKey] = useState('');
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -100,7 +102,21 @@ export default function ChatPage() {
         loadSessions();
         loadAgents();
         loadAllowedModels();
+        checkUser();
     }, []);
+
+    const checkUser = async () => {
+        try {
+            const { createClient } = await import('@/utils/supabase/client');
+            const supabase = createClient();
+            const { data: { user } } = await supabase.auth.getUser();
+            if (user?.email === 'demo@control.ai') {
+                setIsDemoUser(true);
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    }
 
     // Efeito para evitar seleção vazia se o modelo atual não for permitido
     // Garante que o usuário sempre tenha um modelo válido selecionado.
@@ -272,6 +288,7 @@ export default function ChatPage() {
                     })),
                     model: finalModel,
                     sessionId,
+                    tempApiKey: isDemoUser ? tempApiKey : undefined,
                 }),
             });
 

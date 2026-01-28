@@ -26,6 +26,10 @@ export async function updateSettings(prevState: any, formData: FormData): Promis
         return { error: 'Permissão negada. Apenas admins podem alterar configurações.' }
     }
 
+    if (user.email === 'demo@control.ai') {
+        return { error: 'Modo Demo: Para evitar conflitos, insira sua Chave API diretamente na tela de Chat (Sidebar).' }
+    }
+
     const updates: Record<string, string> = {}
 
     // Helper para processar as chaves

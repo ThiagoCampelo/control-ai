@@ -35,7 +35,7 @@ export async function POST(req: Request) {
         }
     }
 
-    const { messages, model, sessionId } = await req.json();
+    const { messages, model, sessionId, tempApiKey } = await req.json();
 
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
@@ -128,11 +128,13 @@ export async function POST(req: Request) {
     try {
         /** ---------------- OPENAI ---------------- */
         if (finalModelName.startsWith('openai:')) {
-            if (!company) throw new Error(`⚠️ Empresa não encontrada (ID: ${profile.company_id}).`);
-            if (!company.api_key_openai) throw new Error(`⚠️ Chave OpenAI não configurada.`);
+            // Se tiver chave temporária (do usuário Demo), usa ela. Se não, tenta do banco.
+            const rawKey = tempApiKey || (company?.api_key_openai ? decrypt(company.api_key_openai) : null);
 
-            const decryptedKey = decrypt(company.api_key_openai);
-            const openai = createOpenAI({ apiKey: decryptedKey });
+            if (!company) throw new Error(`⚠️ Empresa não encontrada (ID: ${profile.company_id}).`);
+            if (!rawKey) throw new Error(`⚠️ Chave OpenAI não configurada. ${userCompany?.name === 'Demo Enterprise' ? 'Insira sua chave no campo lateral.' : ''}`);
+
+            const openai = createOpenAI({ apiKey: rawKey });
 
             const openaiModelMap: Record<string, string> = {
                 'openai:gpt-4o': 'gpt-4o',
@@ -149,11 +151,12 @@ export async function POST(req: Request) {
 
         /** ---------------- ANTHROPIC ---------------- */
         else if (finalModelName.startsWith('anthropic:')) {
-            if (!company) throw new Error(`⚠️ Empresa não encontrada (ID: ${profile.company_id}).`);
-            if (!company.api_key_anthropic) throw new Error(`⚠️ Chave Anthropic não configurada.`);
+            const rawKey = tempApiKey || (company?.api_key_anthropic ? decrypt(company.api_key_anthropic) : null);
 
-            const decryptedKey = decrypt(company.api_key_anthropic);
-            const anthropic = createAnthropic({ apiKey: decryptedKey });
+            if (!company) throw new Error(`⚠️ Empresa não encontrada (ID: ${profile.company_id}).`);
+            if (!rawKey) throw new Error(`⚠️ Chave Anthropic não configurada.`);
+
+            const anthropic = createAnthropic({ apiKey: rawKey });
 
             const anthropicModelMap: Record<string, string> = {
                 'anthropic:opus': 'claude-3-opus-20240229',
