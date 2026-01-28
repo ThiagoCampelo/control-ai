@@ -132,7 +132,7 @@ export async function POST(req: Request) {
             const rawKey = tempApiKey || (company?.api_key_openai ? decrypt(company.api_key_openai) : null);
 
             if (!company) throw new Error(`⚠️ Empresa não encontrada (ID: ${profile.company_id}).`);
-            if (!rawKey) throw new Error(`⚠️ Chave OpenAI não configurada. ${userCompany?.name === 'Demo Enterprise' ? 'Insira sua chave no campo lateral.' : ''}`);
+            if (!rawKey) throw new Error(`⚠️ Chave OpenAI não configurada. ${userCompany?.name === 'Demo Enterprise' ? 'Insira sua chave no painel lateral (Modo Demo).' : ''}`);
 
             const openai = createOpenAI({ apiKey: rawKey });
 

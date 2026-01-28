@@ -365,11 +365,31 @@ export default function ChatPage() {
         <div className="flex h-[calc(100dvh-130px)] md:h-[calc(100vh-140px)] gap-4 overflow-hidden">
             {/* Sidebar (History) - Hidden on mobile, visible on desktop */}
             <div className="hidden md:flex w-64 flex-col bg-card rounded-xl border shrink-0 overflow-hidden shadow-sm">
-                <div className="p-3 border-b bg-muted/30">
+                <div className="p-3 border-b bg-muted/30 space-y-3">
                     <Button onClick={handleNewChat} className="w-full shadow-sm" variant="outline">
                         <Plus className="w-4 h-4 mr-2" />
                         Nova Conversa
                     </Button>
+
+                    {/* Volatile Key Input for Demo Users */}
+                    {isDemoUser && (
+                        <div className="rounded-lg border border-amber-500/30 bg-amber-500/10 p-3 space-y-2">
+                            <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400">
+                                <AlertCircle className="w-3 h-3" />
+                                <span className="text-[10px] font-bold uppercase tracking-wide">Modo Demo</span>
+                            </div>
+                            <p className="text-[10px] text-muted-foreground leading-tight">
+                                O ambiente demo não possui créditos de IA. Insira sua chave pessoal (não será salva).
+                            </p>
+                            <Input
+                                value={tempApiKey}
+                                onChange={(e) => setTempApiKey(e.target.value)}
+                                placeholder="sk-..."
+                                className="h-7 text-xs bg-background/50 border-amber-500/20 focus-visible:ring-amber-500/50"
+                                type="password"
+                            />
+                        </div>
+                    )}
                 </div>
                 <div className="flex-1 overflow-y-auto p-2 space-y-1">
                     {loadingSessions ? (
