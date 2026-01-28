@@ -95,7 +95,7 @@ export default async function AdminPage() {
 
     return (
       <div className="space-y-6">
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           <Card>
             <CardHeader className="pb-2"><CardTitle className="text-sm font-medium">Total de Empresas</CardTitle></CardHeader>
             <CardContent><div className="text-2xl font-bold">{companies.length}</div></CardContent>
@@ -104,6 +104,32 @@ export default async function AdminPage() {
             <CardHeader className="pb-2"><CardTitle className="text-sm font-medium">Usuários Globais</CardTitle></CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{allUsers.length}</div>
+            </CardContent>
+          </Card>
+
+          {/* Demo Analytics */}
+          <Card className="bg-blue-950/20 border-blue-800/30">
+            <CardHeader className="pb-2 flex flex-row items-center justify-between">
+              <CardTitle className="text-sm font-medium text-blue-400">Ambiente Demo</CardTitle>
+              <div className="p-1.5 rounded bg-blue-500/10">
+                <ShieldCheck className="w-4 h-4 text-blue-500" />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="flex justify-between items-end">
+                <div className="space-y-1">
+                  <span className="text-xs text-muted-foreground uppercase font-bold">Acessos</span>
+                  <div className="text-2xl font-bold font-mono">
+                    {/* Simple approximation based on demo user activity */}
+                    {allUsers.find(u => u.email === 'demo@control.ai')?.is_active ? 'Ativo' : 'Inativo'}
+                  </div>
+                </div>
+              </div>
+              <div className="mt-3 pt-3 border-t border-blue-900/50 flex gap-4 text-xs">
+                <div>
+                  <span className="text-blue-400/70">Plano:</span> <span className="font-medium text-blue-300">Demo Plan</span>
+                </div>
+              </div>
             </CardContent>
           </Card>
         </div>

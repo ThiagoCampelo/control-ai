@@ -58,10 +58,12 @@ export function Sidebar({ userRole, className }: { userRole: string; className?:
               Agentes IA
             </Link>
 
-            <Link href="/dashboard/settings" className="flex items-center gap-3 rounded-lg px-3 py-2 text-sidebar-foreground/70 hover:bg-sidebar-accent transition-all">
-              <Settings className="h-5 w-5" />
-              Configurações
-            </Link>
+            {userRole !== 'demo_user' && (
+              <Link href="/dashboard/settings" className="flex items-center gap-3 rounded-lg px-3 py-2 text-sidebar-foreground/70 hover:bg-sidebar-accent transition-all">
+                <Settings className="h-5 w-5" />
+                Configurações
+              </Link>
+            )}
 
             <Link href="/dashboard/subscription" className="flex items-center gap-3 rounded-lg px-3 py-2 text-sidebar-foreground/70 hover:bg-sidebar-accent transition-all">
               <CreditCard className="h-5 w-5" />

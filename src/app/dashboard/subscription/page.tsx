@@ -111,13 +111,29 @@ export default async function SubscriptionPage() {
             </CardContent>
           </Card>
         </div>
+      ) : (profile?.companies as any)?.plans?.name === 'Demo Plan' ? (
+        <div className="flex flex-col items-center justify-center py-12 space-y-6 text-center border rounded-lg bg-linear-to-b from-blue-50 to-transparent dark:from-blue-950/20">
+          <div className="p-4 bg-background rounded-full shadow-lg border animate-bounce">
+            <CreditCard className="w-10 h-10 text-primary" />
+          </div>
+          <div className="space-y-2 max-w-md">
+            <h3 className="text-2xl font-bold">Modo de Demonstração</h3>
+            <p className="text-muted-foreground">
+              Você está explorando o ControlAI em um ambiente sandbox. Seus dados são temporários e os recursos são limitados.
+            </p>
+          </div>
+          <div className="flex gap-4">
+            <a href="/register" className="inline-flex h-10 items-center justify-center rounded-md bg-primary px-8 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50">
+              Criar Conta Completa
+            </a>
+          </div>
+        </div>
       ) : (
         <PricingSection
           mode="dashboard"
           companyId={profile?.company_id}
           userEmail={profile?.email}
-          // Se o nome do plano for 'Enterprise Demo', passamos null para forçar a UI de assinatura
-          currentPlanId={(profile?.companies as any)?.plans?.name === 'Enterprise Demo' ? null : currentPlanId}
+          currentPlanId={currentPlanId}
         />
       )}
 

@@ -3,7 +3,7 @@ import { createAdminClient } from "@/utils/supabase/admin"
 import { SettingsForm } from "./settings-form"
 import { InviteMemberDialog } from "@/components/dashboard/invite-member-dialog"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { CheckCircle2, AlertCircle } from "lucide-react"
+import { CheckCircle2, AlertCircle, ShieldAlert } from "lucide-react"
 
 export default async function SettingsPage() {
     const supabase = await createClient()
@@ -11,9 +11,25 @@ export default async function SettingsPage() {
     const { data: { user } } = await supabase.auth.getUser()
     const { data: profile } = await supabase
         .from('profiles')
-        .select('company_id')
+        .select('company_id, role')
         .eq('id', user?.id)
         .single()
+
+    // Bloqueia acesso de Demo User
+    if (profile?.role === 'demo_user') {
+        return (
+            <div className="flex h-[50vh] flex-col items-center justify-center p-8 text-center space-y-4">
+                <div className="p-4 rounded-full bg-orange-100 dark:bg-orange-950/30">
+                    <ShieldAlert className="w-12 h-12 text-orange-600 dark:text-orange-500" />
+                </div>
+                <h2 className="text-2xl font-bold">Acesso Restrito</h2>
+                <p className="text-muted-foreground max-w-md">
+                    O ambiente de demonstração não permite alterações nas configurações da empresa.
+                    Crie sua conta para ter acesso total.
+                </p>
+            </div>
+        )
+    }
 
     // Usa Admin Client para ler chaves (bypass RLS)
     const adminClient = createAdminClient()
